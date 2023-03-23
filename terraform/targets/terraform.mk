@@ -10,9 +10,9 @@ terraform/init:
 terraform/plan:
 	@echo "Terraform Plan"
 	@cd ${TERRAFORM_FOLDER} && \
-		terraform plan
+		terraform plan -input=false
 
 terraform/apply:
 	@echo "Terraform Apply"
 	@cd ${TERRAFORM_FOLDER} && \
-		terraform apply
+		terraform apply -auto-approve -input=false
