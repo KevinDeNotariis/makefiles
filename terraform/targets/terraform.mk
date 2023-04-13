@@ -1,9 +1,5 @@
 REMOTE_SOURCE_CONTROL ?= github.com
 
-help:
-	@echo 'Available Commands:'
-	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":"}; { if ($$3 == "") { printf " - \033[36m%-18s\033[0m %s\n", $$1, $$2 } else { printf " - \033[36m%-18s\033[0m %s\n", $$2, $$3 }}'
-
 .check-env-variables:
 	@test $${TERRAFORM_BACKEND_BUCKET_NAME?Please set env variable TERRAFORM_BACKEND_BUCKET_NAME}
 	@test $${TERRAFORM_BACKEND_KEY?Please set env variable TERRAFORM_BACKEND_KEY}
@@ -21,7 +17,7 @@ help:
 # -----------------------------------------------------------------------------------
 # Terraform targets
 # -----------------------------------------------------------------------------------
-terraform/init: .check-env-variables .check-and-set-git-creds
+terraform/init: .check-env-variables .check-and-set-git-creds # Run terraform init, setting up the Backend
 	@echo "Terraform Init"
 	@cd ${TERRAFORM_FOLDER} && \
 		rm -rf .terraform && \
@@ -31,12 +27,12 @@ terraform/init: .check-env-variables .check-and-set-git-creds
 			-backend-config="region=${TERRAFORM_BACKEND_REGION}" \
 			-backend-config="dynamodb_table=${TERRAFORM_BACKEND_DYNAMODB_TABLE}"
 
-terraform/plan:
+terraform/plan: # Run terraform plan
 	@echo "Terraform Plan"
 	@cd ${TERRAFORM_FOLDER} && \
 		terraform plan -input=false
 
-terraform/apply:
+terraform/apply: # Run terraform apply
 	@echo "Terraform Apply"
 	@cd ${TERRAFORM_FOLDER} && \
 		terraform apply -auto-approve -input=false
