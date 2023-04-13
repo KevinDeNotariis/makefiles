@@ -7,9 +7,9 @@ test:
 
 help:
 	@echo 'Available Commands:'
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " - \033[36m%-18s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9/ -]+:.*#'  $(MAKEFILE_LIST) | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
 
-makefiles/download:
+makefiles/download: # Downloads the makefiles
 	rm -rf ${MAKEFILES_DIR}
 	mkdir -p ${MAKEFILES_DIR}
 	git clone https://github.com/KevinDeNotariis/makefiles.git ${MAKEFILES_DIR} -q
